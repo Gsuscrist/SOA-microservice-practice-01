@@ -1,0 +1,14 @@
+microservices_gateway/.idea
+microservices_gateway/node_modules
+microservices_gateway/build
+
+microservice_orders/.idea
+microservice_orders/node_modules
+microservice_orders/build
+microservice_orders/.env
+
+microservice_inventory/.idea
+microservice_inventory/.venv
+microservice_inventory/static
+microservice_inventory/templates
+microservice_inventory/.env
