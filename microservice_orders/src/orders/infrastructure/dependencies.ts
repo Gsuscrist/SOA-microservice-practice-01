@@ -5,11 +5,13 @@ import {CreateOrderUseCase} from "../application/useCase/createOrderUseCase";
 import {CreateOrderController} from "./controller/createOrderController";
 import {GetOrderUseCase} from "../application/useCase/getOrderUseCase";
 import {GetOrderController} from "./controller/getOrderController";
+import {RabbitMQ} from "./service/rabbitMQ";
 
 export const database = new MysqlOrderRepository()
 
 export const changeStatusOrderUseCase = new ChangeStatusOrderUseCase(database)
-export const changeStatusOrderController = new ChangeStatusOrderController(changeStatusOrderUseCase)
+export const rabbitMQ = new RabbitMQ()
+export const changeStatusOrderController = new ChangeStatusOrderController(changeStatusOrderUseCase,rabbitMQ)
 
 
 export const createOrderUseCase = new CreateOrderUseCase(database)

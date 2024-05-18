@@ -1,6 +1,8 @@
 import { Order } from "../../domain/entity/order";
 import {query} from "../../../database/mysql";
 import {OrderRepository} from "../../domain/repository/orderRepository";
+import {OrderProduct} from "../../domain/entity/order-product";
+
 
 export class MysqlOrderRepository implements OrderRepository {
 
@@ -35,7 +37,7 @@ export class MysqlOrderRepository implements OrderRepository {
         }
     }
 
-    async create(total: number, date: Date, status: string): Promise<Order | null> {
+    async create(productId:string,units:number, total: number, date: Date, status: string): Promise<Order | null> {
         const id = await this.generateId()
         if (id!=undefined) {
             const sql = "INSERT INTO orders(id,total,date,status) VALUES(?,?,?,?)"
@@ -43,6 +45,9 @@ export class MysqlOrderRepository implements OrderRepository {
             try {
                 const [result]: any = await query(sql, params)
                 if (result) {
+                    const sql = "INSERT INTO orders_products(order_id,product_id,units,price) VALUES (?,?,?,?)"
+                    const params:any[]=[id,productId,units,total]
+                    const [result]:any=await query(sql,params)
                     return this.getOrder(id)
                 }
             } catch (e) {
@@ -86,5 +91,21 @@ export class MysqlOrderRepository implements OrderRepository {
 
     }
 
+    async getOrderProducts(orderId:string){
+        try {
+            const sql="SELECT * FROM orders_products WHERE order_id=? AND deleted_at IS NULL"
+            const params:any[]=[orderId]
+            const [results]:any=await query(sql,params)
+            if (results){
+                const result =results[0]
+                return new OrderProduct(orderId,result.product_id,result.units,result.price,null)
+            }else{
+                return null;
+            }
+        }catch (e) {
+            console.log("repository error:\n",e)
+            return null
+        }
+    }
 
 }

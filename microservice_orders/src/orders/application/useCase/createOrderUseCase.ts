@@ -5,12 +5,14 @@ export class CreateOrderUseCase {
     }
 
     async run(
+        productId:string,
+        units:number,
         total:number,
         date:Date,
         status:string,
     ){
         try {
-            return await this.repository.create(total,date,status)
+            return await this.repository.create(productId,units,total,date,status)
         }catch (e) {
             return null;
         }
